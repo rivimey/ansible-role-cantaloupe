@@ -1,5 +1,12 @@
 ---
 
+- name: install dependencies with yum
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - unzip
+
 - include: install.yml
   tags:
     - cantaloupe
