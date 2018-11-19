@@ -19,8 +19,6 @@ https.key_password = {{ cantaloupe_https_key_password }}
 auth.basic.enabled = {{ cantaloupe_auth_basic_enabled }}
 auth.basic.username = {{ cantaloupe_auth_basic_username }}
 auth.basic.secret = {{ cantaloupe_auth_basic_secret }}
-admin.enabled = {{ cantaloupe_admin_enabled }}
-admin.password = {{ cantaloupe_admin_password }}
 base_uri = {{ cantaloupe_base_uri }}
 slash_substitute = {{ cantaloupe_slash_substitute }}
 max_pixels = {{ cantaloupe_max_pixels }}
@@ -46,6 +44,9 @@ endpoint.iiif.2.restrict_to_sizes = {{ cantaloupe_endpoint_iiif_2_restrict_to_si
 endpoint.api.enabled = {{ cantaloupe_endpoint_api_enabled }}
 endpoint.api.username = {{ cantaloupe_endpoint_api_username }}
 endpoint.api.secret = {{ cantaloupe_endpoint_api_secret }}
+endpoint.admin.enabled = {{ cantaloupe_admin_enabled }}
+endpoint.admin.username = admin
+endpoint.admin.secret = {{ cantaloupe_admin_password }}
 
 ###########################################################################
 # RESOLVERS
