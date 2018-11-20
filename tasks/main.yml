@@ -13,16 +13,16 @@
     - cantaloupe
     - cantaloupe-install
 
-- include: config.yml
-  tags:
-    - cantaloupe
-    - cantaloupe-config
-
 - include: web.yml
   tags:
     - cantaloupe
     - cantaloupe-web
   when: cantaloupe_deploy_war
+
+- include: config.yml
+  tags:
+    - cantaloupe
+    - cantaloupe-config
 
 - include: cache.yml
   tags:
