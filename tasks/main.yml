@@ -19,6 +19,11 @@
     - cantaloupe-web
   when: cantaloupe_deploy_war
 
+# Wait a few seconds for webapp to be installed
+- name: Waiting for webapp to be installed
+  pause:
+    seconds: 10
+
 - include: config.yml
   tags:
     - cantaloupe
