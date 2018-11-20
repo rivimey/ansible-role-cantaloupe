@@ -4,7 +4,7 @@
 cantaloupe_version: 3.3.1
 # Where to extract the cantaloupe archive
 cantaloupe_install_root: /opt
-# Target of a symlink from the extracted cantaloupe archive 
+# Target of a symlink from the extracted cantaloupe archive
 cantaloupe_symlink: /opt/cantaloupe
 # Path to cantaloupe logs
 cantaloupe_log_path: /var/log/cantaloupe
@@ -31,12 +31,14 @@ cantaloupe_create_FilesystemCache_dir: no
 cantaloupe_http_enabled: "true"
 cantaloupe_http_host: 0.0.0.0
 cantaloupe_http_port: 8182
+cantaloupe_http_http2_enabled: "false"
 
 # !! Whether to enable HTTPS access (https://), and on what host interface
 # and TCP port. (Applies in standalone mode only.)
 cantaloupe_https_enabled: "false"
 cantaloupe_https_host: 0.0.0.0
 cantaloupe_https_port: 8183
+cantaloupe_https_http2_enabled: "false"
 
 # !! Available values are `JKS` and `PKCS12`. (Standalone mode only.)
 cantaloupe_https_key_store_type: JKS
@@ -53,6 +55,8 @@ cantaloupe_auth_basic_secret: mypassword
 cantaloupe_admin_enabled: "false"
 # Password to access the Control Panel. (The username is "admin".)
 cantaloupe_admin_password:
+
+cantaloupe_http_accept_queue_limit:
 
 # Base URI to use for internal links, such as Link headers and JSON-LD @id
 # values, in a reverse-proxy context. This should only be used when
@@ -103,6 +107,8 @@ cantaloupe_endpoint_iiif_2_enabled: "true"
 # values are `inline`, `attachment`, and `none`.
 cantaloupe_endpoint_iiif_content_disposition: inline
 
+cantaloupe_endpoint_iiif_min_size: 64
+
 # Minimum size that will be used in info.json "tiles" keys. See the user
 # manual for an explanation of how these are calculated.
 cantaloupe_endpoint_iiif_min_tile_size: 1024
@@ -111,6 +117,10 @@ cantaloupe_endpoint_iiif_min_tile_size: 1024
 # response will be denied.
 cantaloupe_endpoint_iiif_2_restrict_to_sizes: "false"
 
+cantaloupe_admin_enabled: "true"
+cantaloupe_admin_username: "admin"
+cantaloupe_admin_password: "admin"
+
 # Enables the administrative REST API. (See the user manual.)
 cantaloupe_endpoint_api_enabled: "false"
 
@@ -118,119 +128,133 @@ cantaloupe_endpoint_api_enabled: "false"
 cantaloupe_endpoint_api_username:
 cantaloupe_endpoint_api_secret:
 
+
+
 ###########################################################################
 # RESOLVERS
 ###########################################################################
 
-# Specifies one resolver to translate the identifier in the URL to an image
-# source for all requests. Available values are `FilesystemResolver`,
-# `HttpResolver`, `JdbcResolver`, `AmazonS3Resolver`, and
-# `AzureStorageResolver`.
-cantaloupe_resolver_static: FilesystemResolver
+# Specifies one source to translate the identifier in the URL to an image
+# source for all requests. Available values are `FilesystemSource`,
+# `HttpSource`, `JdbcSource`, `AmazonS3Source`, and
+# `AzureStorageSource`.
+cantaloupe_source_static: FilesystemSource
 
-# If "true", `resolver_static` will be overridden, and the
-# `get_resolver(identifier)` delegate script method will be used to select
-# a resolver per-request.
-cantaloupe_resolver_delegate: "false"
+# If "true", `source_static` will be overridden, and the
+# `get_source(identifier)` delegate script method will be used to select
+# a source per-request.
+cantaloupe_source_delegate: "false"
 
 #----------------------------------------
-# FilesystemResolver
+# FilesystemSource
 #----------------------------------------
 
-# Tells FilesystemResolver how to look up files. Allowed values are
+# Tells FilesystemSource how to look up files. Allowed values are
 # `BasicLookupStrategy` and `ScriptLookupStrategy`. ScriptLookupStrategy
 # uses the delegate script for dynamic lookups; see the user manual for
 # details.
-cantaloupe_FilesystemResolver_lookup_strategy: BasicLookupStrategy
+cantaloupe_FilesystemSource_lookup_strategy: BasicLookupStrategy
 
 # Server-side path that will be prefixed to the identifier in the URL.
 # Trailing slash is important.
-cantaloupe_FilesystemResolver_BasicLookupStrategy_path_prefix: /home/myself/images/
+cantaloupe_FilesystemSource_BasicLookupStrategy_path_prefix: /home/myself/images/
 
 
 # Server-side path or extension that will be suffixed to the identifier in
 # the URL.
-cantaloupe_FilesystemResolver_BasicLookupStrategy_path_suffix:
+cantaloupe_FilesystemSource_BasicLookupStrategy_path_suffix:
 
 #----------------------------------------
-# HttpResolver
+# HttpSource
 #----------------------------------------
 
-# Tells HttpResolver how to look up resources. Allowed values are
+# Tells HttpSource how to look up resources. Allowed values are
 # `BasicLookupStrategy` and `ScriptLookupStrategy`. ScriptLookupStrategy
 # uses the delegate script for dynamic lookups; see the user manual for
 # details.
-cantaloupe_HttpResolver_lookup_strategy: BasicLookupStrategy
+cantaloupe_HttpSource_lookup_strategy: BasicLookupStrategy
 
 # URL that will be prefixed to the identifier in the request URL. Trailing
 # slash is important.
-cantaloupe_HttpResolver_BasicLookupStrategy_url_prefix: http://localhost/images/
+cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: http://localhost/images/
 
 # Path, extension, query string, etc. that will be suffixed to the
 # identifier in the request URL.
-cantaloupe_HttpResolver_BasicLookupStrategy_url_suffix:
+cantaloupe_HttpSource_BasicLookupStrategy_url_suffix:
 
 # Used for HTTP Basic authentication.
-cantaloupe_HttpResolver_auth_basic_username:
-cantaloupe_HttpResolver_auth_basic_secret:
+cantaloupe_HttpSource_auth_basic_username:
+cantaloupe_HttpSource_auth_basic_secret:
 
 #----------------------------------------
-# JdbcResolver
+# JdbcSource
 #----------------------------------------
 
-# Note: JdbcResolver requires some delegate methods to be implemented in
+# Note: JdbcSource requires some delegate methods to be implemented in
 # addition to the configuration here; see the user manual.
 
 # !!
-cantaloupe_JdbcResolver_url: jdbc:postgresql://localhost:5432/my_database
+cantaloupe_JdbcSource_url: jdbc:postgresql://localhost:5432/my_database
 # !!
-cantaloupe_JdbcResolver_user: postgres
+cantaloupe_JdbcSource_user: postgres
 # !!
-cantaloupe_JdbcResolver_password: postgres
+cantaloupe_JdbcSource_password: postgres
 
 # !! Connection timeout in seconds.
-cantaloupe_JdbcResolver_connection_timeout: 10
+cantaloupe_JdbcSource_connection_timeout: 10
 
 #----------------------------------------
-# AmazonS3Resolver
+# AmazonS3Source
 #----------------------------------------
+
+# !! Endpoint URI.
+# For AWS endpoints, see:
+# https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+cantaloupe_S3Source_endpoint:
 
 # !! Access key ID and secret key associated with your AWS account.
 # See: http://aws.amazon.com/security-credentials
-cantaloupe_AmazonS3Resolver_access_key_id:
-cantaloupe_AmazonS3Resolver_secret_key:
+cantaloupe_S3Source_access_key_id:
+cantaloupe_S3Source_secret_key:
+
+# !! Maximum number of concurrent HTTP connections to AWS.
+cantaloupe_S3Source_max_connections:
 
 # !! Name of the bucket containing images to be served.
-cantaloupe_AmazonS3Resolver_bucket_name:
+cantaloupe_S3Source_bucket_name:
 
 # !! Can be left blank.
 # See: http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-cantaloupe_AmazonS3Resolver_bucket_region:
+cantaloupe_S3Source_bucket_region:
 
-# Tells AmazonS3Resolver how to look up objects. Allowed values are
+# Tells AmazonS3Source how to look up objects. Allowed values are
 # `BasicLookupStrategy` and `ScriptLookupStrategy`. ScriptLookupStrategy
 # uses the delegate script for dynamic lookups; see the user manual for
 # details.
-cantaloupe_AmazonS3Resolver_lookup_strategy: BasicLookupStrategy
+cantaloupe_S3Source_lookup_strategy: BasicLookupStrategy
+
+cantaloupe_S3Source_BasicLookupStrategy_path_prefix:
+
+cantaloupe_S3Source_BasicLookupStrategy_path_suffix: 
 
 #----------------------------------------
-# AzureStorageResolver
+# AzureStorageSource
 #----------------------------------------
 
 # !! Name of your Azure account.
-cantaloupe_AzureStorageResolver_account_name:
+cantaloupe_AzureStorageSource_account_name:
 
 # !! Key of your Azure account.
-cantaloupe_AzureStorageResolver_account_key:
+cantaloupe_AzureStorageSource_account_key:
 
 # !! Name of the container containing images to be served.
-cantaloupe_AzureStorageResolver_container_name:
+cantaloupe_AzureStorageSource_container_name:
 
-# Tells AzureStorageResolver how to look up objects. Allowed values are
+# Tells AzureStorageSource how to look up objects. Allowed values are
 # `BasicLookupStrategy` and `ScriptLookupStrategy`. ScriptLookupStrategy
 # uses the delegate script for dynamic lookups; see the user manual for
 # details.
-cantaloupe_AzureStorageResolver_lookup_strategy: BasicLookupStrategy
+cantaloupe_AzureStorageSource_lookup_strategy: BasicLookupStrategy
 
 ###########################################################################
 # PROCESSORS
@@ -297,7 +321,7 @@ cantaloupe_processor_jpg_quality: 80
 cantaloupe_processor_tif_compression: LZW
 
 # Available values are `StreamStrategy` and `CacheStrategy`. StreamStrategy
-# will try to stream source images from non-filesystem resolvers, when this
+# will try to stream source images from non-filesystem sources, when this
 # is possible; CacheStrategy will first download them into the source cache
 # using FilesystemCache, which must also be configured.
 cantaloupe_StreamProcessor_retrieval_strategy: StreamStrategy
@@ -375,7 +399,7 @@ cantaloupe_cache_client_no_transform: "true"
 # Enables the source cache. The only available value is `FilesystemCache`.
 # Set blank to disable source image caching.
 # Note that source images will only be cached when a FileProcessor is used
-# with a StreamResolver, or when a StreamProcessor is used with
+# with a StreamSource, or when a StreamProcessor is used with
 # `StreamProcessor.retrieval_strategy` set to `CacheStrategy`.
 cantaloupe_cache_source:
 
@@ -388,7 +412,7 @@ cantaloupe_cache_derivative:
 # blank or 0 for infinite.
 cantaloupe_cache_server_ttl_seconds: 2592000
 
-# If "true", when a resolver reports that the requested source image has gone
+# If "true", when a source reports that the requested source image has gone
 # missing, all cached information relating to it (if any) will be deleted.
 # (This is effectively always "false" when cache.server.resolve_first is also
 # "false".)
