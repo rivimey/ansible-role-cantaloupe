@@ -6,6 +6,7 @@
   vars:
     packages:
     - unzip
+    - wget
 
 - include: install.yml
   tags:
