@@ -235,7 +235,7 @@ cantaloupe_S3Source_lookup_strategy: BasicLookupStrategy
 
 cantaloupe_S3Source_BasicLookupStrategy_path_prefix:
 
-cantaloupe_S3Source_BasicLookupStrategy_path_suffix: 
+cantaloupe_S3Source_BasicLookupStrategy_path_suffix:
 
 #----------------------------------------
 # AzureStorageSource
@@ -324,7 +324,9 @@ cantaloupe_processor_tif_compression: LZW
 # will try to stream source images from non-filesystem sources, when this
 # is possible; CacheStrategy will first download them into the source cache
 # using FilesystemCache, which must also be configured.
-cantaloupe_StreamProcessor_retrieval_strategy: StreamStrategy
+cantaloupe_processor_stream_retrieval_strategy: StreamStrategy
+
+cantaloupe_processor_fallback_retrieval_strategy: DownloadStrategy
 
 #----------------------------------------
 # FfmpegProcessor

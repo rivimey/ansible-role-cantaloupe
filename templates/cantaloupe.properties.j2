@@ -276,7 +276,9 @@ processor.ManualSelectionStrategy.webm = FfmpegProcessor
 processor.ManualSelectionStrategy.webp = ImageMagickProcessor
 
 # Fall back to this processor for any formats not assigned above.
-processor.ManualSelectionStrategy.fallback = Java2dProcessor
+processor.ManualSelectionStrategy.fallback = {{ cantaloupe_processor_fallback }}
+
+
 
 #----------------------------------------
 # Global Processor Configuration
@@ -290,13 +292,13 @@ processor.ManualSelectionStrategy.fallback = Java2dProcessor
 # * `CacheStrategy` will download it into the source cache using
 #   FilesystemCache, which must also be configured. (This will perform a
 #   lot better than DownloadStrategy if you can spare the disk space.)
-processor.stream_retrieval_strategy = StreamStrategy
+processor.stream_retrieval_strategy = {{ cantaloupe_processor_stream_retrieval_strategy }}
 
 # Controls how an incompatible StreamSource + FileProcessor combination is
 # dealt with.
 # * `DownloadStrategy` and `CacheStrategy` work the same as above.
 # * `AbortStrategy` causes the request to fail.
-processor.fallback_retrieval_strategy = DownloadStrategy
+processor.fallback_retrieval_strategy = {{ cantaloupe_processor_fallback_retrieval_strategy }}
 
 # Resolution of vector rasterization (of e.g. PDFs) at a scale of 1.
 processor.dpi = 150
