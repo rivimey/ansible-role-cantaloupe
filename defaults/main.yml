@@ -233,6 +233,8 @@ cantaloupe_S3Source_bucket_region:
 # details.
 cantaloupe_S3Source_lookup_strategy: BasicLookupStrategy
 
+cantaloupe_S3Source_BasicLookupStrategy_bucket_name: 
+
 cantaloupe_S3Source_BasicLookupStrategy_path_prefix:
 
 cantaloupe_S3Source_BasicLookupStrategy_path_suffix:
