@@ -275,6 +275,7 @@ cantaloupe_processor_selection_strategy: ManualSelectionStrategy
 cantaloupe_processor_avi: FfmpegProcessor
 cantaloupe_processor_bmp:
 cantaloupe_processor_dcm:
+cantaloupe_processor_flv:
 cantaloupe_processor_gif:
 cantaloupe_processor_jp2: KakaduProcessor
 cantaloupe_processor_jpg:
