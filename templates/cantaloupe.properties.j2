@@ -251,7 +251,7 @@ AzureStorageSource.lookup_strategy = BasicLookupStrategy
 #   dependencies.
 # * If set to `ManualSelectionStrategy`, a processor will be chosen based
 #   on the rest of the keys in this section.
-processor.selection_strategy = AutomaticSelectionStrategy
+processor.selection_strategy = {{ cantaloupe_processor_selection_strategy }}
 
 # Built-in processors are `Java2dProcessor`, `GraphicsMagickProcessor`,
 # `ImageMagickProcessor`, `KakaduDemoProcessor`, `KakaduNativeProcessor`,
@@ -259,21 +259,38 @@ processor.selection_strategy = AutomaticSelectionStrategy
 # `FfmpegProcessor`.
 
 # These format-specific definitions are optional.
-processor.ManualSelectionStrategy.avi = FfmpegProcessor
-processor.ManualSelectionStrategy.bmp =
-processor.ManualSelectionStrategy.dcm = ImageMagickProcessor
-processor.ManualSelectionStrategy.flv = FfmpegProcessor
-processor.ManualSelectionStrategy.gif =
-processor.ManualSelectionStrategy.jp2 = KakaduNativeProcessor
-processor.ManualSelectionStrategy.jpg =
-processor.ManualSelectionStrategy.mov = FfmpegProcessor
-processor.ManualSelectionStrategy.mp4 = FfmpegProcessor
-processor.ManualSelectionStrategy.mpg = FfmpegProcessor
-processor.ManualSelectionStrategy.pdf = PdfBoxProcessor
-processor.ManualSelectionStrategy.png =
-processor.ManualSelectionStrategy.tif =
-processor.ManualSelectionStrategy.webm = FfmpegProcessor
-processor.ManualSelectionStrategy.webp = ImageMagickProcessor
+processor.ManualSelectionStrategy.avi = {{ cantaloupe_processor_avi }}
+processor.ManualSelectionStrategy.bmp = {{ cantaloupe_processor_bmp }}
+processor.ManualSelectionStrategy.dcm = {{ cantaloupe_processor_dcm }}
+processor.ManualSelectionStrategy.flv = {{ cantaloupe_processor_flv }}
+processor.ManualSelectionStrategy.gif = {{ cantaloupe_processor_gif }}
+processor.ManualSelectionStrategy.jp2 = {{ cantaloupe_processor_jp2 }}
+processor.ManualSelectionStrategy.jpg = {{ cantaloupe_processor_jpg }}
+processor.ManualSelectionStrategy.mov = {{ cantaloupe_processor_mov }}
+processor.ManualSelectionStrategy.mp4 = {{ cantaloupe_processor_mp4 }}
+processor.ManualSelectionStrategy.mpg = {{ cantaloupe_processor_mpg }}
+processor.ManualSelectionStrategy.pdf = {{ cantaloupe_processor_pdf }}
+processor.ManualSelectionStrategy.png = {{ cantaloupe_processor_png }}
+processor.ManualSelectionStrategy.tif = {{ cantaloupe_processor_tif }}
+processor.ManualSelectionStrategy.webm = {{ cantaloupe_processor_webm }}
+processor.ManualSelectionStrategy.webp = {{ cantaloupe_processor_webp }}
+
+# The above fields do not seem to work, these are what are added when you configure through admin console.
+processor.avi = {{ cantaloupe_processor_avi }}
+processor.bmp = {{ cantaloupe_processor_bmp }}
+processor.dcm = {{ cantaloupe_processor_dcm }}
+processor.flv = {{ cantaloupe_processor_flv }}
+processor.gif = {{ cantaloupe_processor_gif }}
+processor.jp2 = {{ cantaloupe_processor_jp2 }}
+processor.jpg = {{ cantaloupe_processor_jpg }}
+processor.mov = {{ cantaloupe_processor_mov }}
+processor.mp4 = {{ cantaloupe_processor_mp4 }}
+processor.mpg = {{ cantaloupe_processor_mpg }}
+processor.pdf = {{ cantaloupe_processor_pdf }}
+processor.png = {{ cantaloupe_processor_png }}
+processor.tif = {{ cantaloupe_processor_tif }}
+processor.webm = {{ cantaloupe_processor_webm }}
+processor.webp = {{ cantaloupe_processor_webp }}
 
 # Fall back to this processor for any formats not assigned above.
 processor.ManualSelectionStrategy.fallback = {{ cantaloupe_processor_fallback }}

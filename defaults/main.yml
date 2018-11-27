@@ -264,6 +264,8 @@ cantaloupe_AzureStorageSource_lookup_strategy: BasicLookupStrategy
 # Processor Selection
 #----------------------------------------
 
+cantaloupe_processor_selection_strategy: ManualSelectionStrategy
+
 # Image processors to use for various source formats. Available values are
 # `Java2dProcessor`, `GraphicsMagickProcessor`, `ImageMagickProcessor`,
 # `KakaduProcessor`, `OpenJpegProcessor`, `JaiProcessor`, `PdfBoxProcessor`,
