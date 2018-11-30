@@ -51,11 +51,6 @@ cantaloupe_auth_basic_enabled: "false"
 cantaloupe_auth_basic_username: myself
 cantaloupe_auth_basic_secret: mypassword
 
-# Enables the Control Panel, at /admin.
-cantaloupe_admin_enabled: "false"
-# Password to access the Control Panel. (The username is "admin".)
-cantaloupe_admin_password:
-
 cantaloupe_http_accept_queue_limit:
 
 # Base URI to use for internal links, such as Link headers and JSON-LD @id
@@ -233,7 +228,7 @@ cantaloupe_S3Source_bucket_region:
 # details.
 cantaloupe_S3Source_lookup_strategy: BasicLookupStrategy
 
-cantaloupe_S3Source_BasicLookupStrategy_bucket_name: 
+cantaloupe_S3Source_BasicLookupStrategy_bucket_name:
 
 cantaloupe_S3Source_BasicLookupStrategy_path_prefix:
 
