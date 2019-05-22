@@ -22,3 +22,5 @@ cantaloupe_deploy_war_path: /path/to/tomcat/webapps
 cantaloupe_deploy_war_filename: cantaloupe
 # Create the filesystem cache directory automatically
 cantaloupe_create_FilesystemCache_dir: no
+
+cantaloupe_FilesystemCache_pathname: /usr/cache/cantaloupe

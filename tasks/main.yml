@@ -27,9 +27,3 @@
   tags:
     - cantaloupe
     - cantaloupe-config
-
-- include: cache.yml
-  tags:
-    - cantaloupe
-    - cantaloupe-cache
-  when: cantaloupe_create_FilesystemCache_dir
