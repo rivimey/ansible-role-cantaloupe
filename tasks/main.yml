@@ -1,5 +1,4 @@
 ---
-
 - name: install dependencies with yum
   yum:
     name: "{{ packages }}"

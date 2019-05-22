@@ -1,5 +1,4 @@
 ---
-
 - name: create cantaloupe cache dir
   file:
     state: directory

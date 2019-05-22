@@ -1,8 +1,42 @@
 ---
+- name: Allow encoded slashes in Tomcat # Necessary for images with subpaths with HTTP Source
+  lineinfile:
+    path: "{{ tomcat_target_dir }}/conf/catalina.properties"
+    line: "org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+    state: present
+    insertafter: EOF
+  ignore_errors: true
 
-- name: Template Cantaloupe Properties
-  template:
-    src: cantaloupe.properties.j2
-    dest:  "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+- name: Copy Cantaloupe config file # Stopped using template module because forwards-compatibility kept breaking
+  command: "cp {{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample {{ cantaloupe_properties_path }}/cantaloupe.properties"
+
+- name: Fix permissions of Cantaloupe config file
+  file:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    mode: 0755
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
+
+- name: Enable admin endpoint
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^endpoint.admin.enabled'
+    line: endpoint.admin.enabled = true
+
+- name: Set admin password
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^endpoint.admin.secret'
+    line: endpoint.admin.secret = {{ cantaloupe_admin_password }}
+
+- name: Set static source
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^source.static'
+    line: source.static = {{ cantaloupe_source_static }}
+
+- name: Set HTTP source URL prefix
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^HttpSource.BasicLookupStrategy.url_prefix'
+    line: HttpSource.BasicLookupStrategy.url_prefix = {{ cantaloupe_HttpSource_BasicLookupStrategy_url_prefix }}

@@ -1,5 +1,4 @@
 ---
-
 - name: Install Cantaloupe
   unarchive:
     remote_src: yes
@@ -16,6 +15,9 @@
     dest: "{{ cantaloupe_symlink }}"
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
+
+- name: Copy external libraries into place
+  command: "cp -r {{ cantaloupe_install_root }}/cantaloupe/deps/Linux-x86-64/lib/. /usr/lib64/"
 
 - name: Create Cantaloupe log path
   file:
