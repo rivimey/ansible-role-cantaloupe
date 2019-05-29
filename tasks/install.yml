@@ -16,8 +16,25 @@
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
 
+- name: Copy Cantaloupe config file # Stopped using template module because forwards-compatibility kept breaking
+  command: "cp {{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample {{ cantaloupe_properties_path }}/cantaloupe.properties"
+
 - name: Copy external libraries into place
   command: "cp -r {{ cantaloupe_install_root }}/cantaloupe/deps/Linux-x86-64/lib/. /usr/lib64/"
+
+- name: Fix ownership and permissions of Cantaloupe config file
+  file:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    mode: 0755
+    owner: "{{ cantaloupe_user }}"
+    group: "{{ cantaloupe_group }}"
+
+- name: Fix ownership and permissions of Cantaloupe war file
+  file:
+    path: "{{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
+    mode: 0755
+    owner: "{{ cantaloupe_user }}"
+    group: "{{ cantaloupe_group }}"
 
 - name: Create Cantaloupe log path
   file:

@@ -1,0 +1,9 @@
+[Unit]
+Description=Cantaloupe IIIF Image Server
+
+[Service]
+ExecStart={{ cantaloupe_start_command }}
+User={{ cantaloupe_user }}
+
+[Install]
+WantedBy=multi-user.target

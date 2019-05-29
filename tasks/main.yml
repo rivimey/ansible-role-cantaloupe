@@ -7,23 +7,19 @@
     - unzip
     - wget
 
+- name: create cantaloupe user
+  user:
+    name: cantaloupe
+    shell: /bin/bash
+    state: present
+
 - include: install.yml
-  tags:
-    - cantaloupe
-    - cantaloupe-install
-
-- include: web.yml
-  tags:
-    - cantaloupe
-    - cantaloupe-web
-  when: cantaloupe_deploy_war
-
-# Wait a few seconds for webapp to be installed
-- name: Waiting for webapp to be installed
-  pause:
-    seconds: 10
 
 - include: config.yml
-  tags:
-    - cantaloupe
-    - cantaloupe-config
+
+- include: service.yml
+
+- name: Ensure cantaloupe service is started
+  service:
+    name: cantaloupe
+    state: started

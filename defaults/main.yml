@@ -14,13 +14,8 @@ cantaloupe_group: cantaloupe
 
 cantaloupe_properties_path: /opt/cantaloupe/
 
-# Whether to automatically deploy the war file
-cantaloupe_deploy_war: no
-# Where to deploy the war to
-cantaloupe_deploy_war_path: /path/to/tomcat/webapps
-# Name for the deployed war (minus .war), this is the context path
-cantaloupe_deploy_war_filename: cantaloupe
-# Create the filesystem cache directory automatically
-cantaloupe_create_FilesystemCache_dir: no
+cantaloupe_start_command: "/bin/java -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties -Xms2g -Xmx8g -jar {{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
 
-cantaloupe_FilesystemCache_pathname: /usr/cache/cantaloupe
+cantaloupe_systemd_path: "/etc/systemd/system/multi-user.target.wants"
+
+cantaloupe_is_dev: true

@@ -1,27 +1,17 @@
 ---
-- name: Allow encoded slashes in Tomcat # Necessary for images with subpaths with HTTP Source
-  lineinfile:
-    path: "{{ tomcat_target_dir }}/conf/catalina.properties"
-    line: "org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
-    state: present
-    insertafter: EOF
-  ignore_errors: true
-
-- name: Copy Cantaloupe config file # Stopped using template module because forwards-compatibility kept breaking
-  command: "cp {{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample {{ cantaloupe_properties_path }}/cantaloupe.properties"
-
-- name: Fix permissions of Cantaloupe config file
-  file:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    mode: 0755
-    owner: "{{ cantaloupe_user }}"
-    group: "{{ cantaloupe_group }}"
-
 - name: Enable admin endpoint
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     regexp: '^endpoint.admin.enabled'
     line: endpoint.admin.enabled = true
+  when: cantaloupe_is_dev
+
+- name: Enable administrative HTTP API
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^endpoint.api.enabled'
+    line: endpoint.api.enabled = true
+  when: cantaloupe_is_dev
 
 - name: Set admin password
   lineinfile:
@@ -40,3 +30,27 @@
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     regexp: '^HttpSource.BasicLookupStrategy.url_prefix'
     line: HttpSource.BasicLookupStrategy.url_prefix = {{ cantaloupe_HttpSource_BasicLookupStrategy_url_prefix }}
+
+- name: Enable rolling general application log
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^log.application.RollingFileAppender.enabled'
+    line: log.application.RollingFileAppender.enabled = true
+
+- name: Set general application log file path
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^log.application.RollingFileAppender.pathname'
+    line: log.application.RollingFileAppender.pathname = {{ cantaloupe_log_path }}/application.log
+
+- name: Enable rolling error log
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^log.error.RollingFileAppender.enabled'
+    line: log.error.RollingFileAppender.enabled = true
+
+- name: Set error log file path
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^log.error.RollingFileAppender.pathname'
+    line: log.error.RollingFileAppender.pathname = {{ cantaloupe_log_path }}/error.log
