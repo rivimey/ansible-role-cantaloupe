@@ -4,14 +4,14 @@
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     regexp: '^endpoint.admin.enabled'
     line: endpoint.admin.enabled = true
-  when: cantaloupe_is_dev
+  when: cantaloupe_is_dev|bool
 
 - name: Enable administrative HTTP API
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     regexp: '^endpoint.api.enabled'
     line: endpoint.api.enabled = true
-  when: cantaloupe_is_dev
+  when: cantaloupe_is_dev|bool
 
 - name: Set admin password
   lineinfile:
