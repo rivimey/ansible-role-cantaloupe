@@ -1,4 +1,10 @@
 ---
+- name: Set HTTP port
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^http.port'
+    line: http.port = {{ cantaloupe_http_port }}
+
 - name: Enable admin endpoint
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"

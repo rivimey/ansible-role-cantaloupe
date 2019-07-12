@@ -19,3 +19,5 @@ cantaloupe_start_command: "/bin/java -Dcantaloupe.config={{ cantaloupe_propertie
 cantaloupe_systemd_path: "/etc/systemd/system/multi-user.target.wants"
 
 cantaloupe_is_dev: true
+
+cantaloupe_http_port: 8182
