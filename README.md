@@ -1,50 +1,67 @@
 # Ansible Role: Cantaloupe
 
-An Ansible role that installs [Cantaloupe](https://github.com/medusa-project/cantaloupe) in a Tomcat 8 servlet container on:
+An Ansible role that installs [Cantaloupe](https://github.com/medusa-project/cantaloupe) in standalone mode. Servlet mode (running in Tomcat) has been removed in this role. 
 
-* Centos/RHEL 7.x
-* Ubuntu Xenial
+## Requirements
+
+Tested on Centos 7.
 
 ## Role Variables
 
-Available variables are listed below, along with default values:
+Version of Cantaloupe to install
 
-```
-# Cantaloupe version
-cantaloupe_version: 3.3.1
-# Where to extract the cantaloupe archive
-cantaloupe_install_root: /opt
-# Target of a symlink from the extracted cantaloupe archive 
-cantaloupe_symlink: /opt/cantaloupe
-# Path to cantaloupe logs
-cantaloupe_log_path: /var/log/cantaloupe
-# Cantaloupe user
-cantaloupe_user: cantaloupe
-# Cantaloupe group
-cantaloupe_group: cantaloupe
+    cantaloupe_version: 4.0.2
 
-# Whether to automatically deploy the war file
-cantaloupe_deploy_war: no
-# Where to deploy the war to
-cantaloupe_deploy_war_path: /path/to/tomcat/webapps
-# Name for the deployed war (minus .war), this is the context path
-cantaloupe_deploy_war_filename: cantaloupe
-# Create the filesystem cache directory automatically
-cantaloupe_create_FilesystemCache_dir: no
-```
+Where to install Cantaloupe
 
-There are many more options available and documented in the [defaults/main.yml](defaults/main.yml)
+    cantaloupe_install_root: /opt
 
-## Dependencies
+Target of symlink from the extracted cantaloupe archive
 
-* A tomcat 8 container like [islandora.tomcat8](https://github.com/Islandora-DevOps/ansible-role-tomcat8)
+    cantaloupe_symlink: /opt/cantaloupe
+
+Path to cantaloupe logs
+
+    cantaloupe_log_path: /var/log/cantaloupe
+
+Cantaloupe user
+
+    cantaloupe_user: cantaloupe
+
+Cantaloupe group
+
+    cantaloupe_group: cantaloupe
+
+Where to find properties file cantaloupe.properties
+
+    cantaloupe_properties_path: /opt/cantaloupe/
+
+Command to start cantaloupe with in service file. Note java heap size settings, adjust to taste.
+
+    cantaloupe_start_command: "/bin/java -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties -Xms2g -Xmx8g -jar {{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
+
+Where to install service file.
+
+    cantaloupe_systemd_path: "/etc/systemd/system/multi-user.target.wants"
+
+Whether to enable admin console with default password (admin). 
+
+    cantaloupe_is_dev: true
+
+Port for Cantaloupe to use.
+
+    cantaloupe_http_port: 8182
   
 ## Example Playbook
 
-    - hosts: webservers
+    - hosts: cantaloupe
       roles:
-        - { role: islandora.cantaloupe }
+        - cantaloupe
 
 ## License
 
 MIT
+
+## Author
+
+Forked from [Islandora-Devops/ansible-role-cantaloupe](https://github.com/Islandora-Devops/ansible-role-cantaloupe) and modified heavily by NYU DLTS
