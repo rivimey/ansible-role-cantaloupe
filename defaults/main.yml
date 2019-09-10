@@ -1,6 +1,6 @@
 ---
 # Cantaloupe version
-cantaloupe_version: 4.0.2
+cantaloupe_version: 4.1.3
 # Where to extract the cantaloupe archive
 cantaloupe_install_root: /opt
 # Target of a symlink from the extracted cantaloupe archive
@@ -21,3 +21,17 @@ cantaloupe_systemd_path: "/etc/systemd/system/multi-user.target.wants"
 cantaloupe_is_dev: true
 
 cantaloupe_http_port: 8182
+
+cantaloupe_source_static: HttpSource
+
+cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: ""
+
+cantaloupe_S3Source_endpoint: ""
+
+cantaloupe_S3Source_access_key_id: ""
+
+cantaloupe_S3Source_secret_key: ""
+
+cantaloupe_S3Source_bucket_name: ""
+
+cantaloupe_S3Source_path_prefix: ""
