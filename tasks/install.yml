@@ -42,3 +42,10 @@
     path: "{{ cantaloupe_log_path }}"
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
+
+- name: Create temp directory for jetty classes # see https://cantaloupe-project.github.io/manual/4.1/deployment.html
+  file:
+    state: directory
+    path: "{{ cantaloupe_install_root }}/cantaloupe/tmp"
+    owner: "{{ cantaloupe_user }}"
+    group: "{{ cantaloupe_group }}"

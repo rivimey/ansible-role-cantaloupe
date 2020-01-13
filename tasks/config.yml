@@ -1,4 +1,10 @@
 ---
+- name: Set application temp directory
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^temp_pathname'
+    line: temp_pathname = {{ cantaloupe_install_root }}/cantaloupe/tmp
+
 - name: Set HTTP port
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
