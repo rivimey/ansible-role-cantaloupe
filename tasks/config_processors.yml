@@ -15,4 +15,10 @@
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     regexp: '^processor.ManualSelectionStrategy.fallback'
-    line: processor.ManualSelectionStrategy.fallback = "{{ cantaloupe_fallback_processor }}"
+    line: processor.ManualSelectionStrategy.fallback = {{ cantaloupe_fallback_processor }}
+
+- name: Blank out buggy webp processor
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^processor.ManualSelectionStrategy.webp'
+    line: 'processor.ManualSelectionStrategy.webp = '

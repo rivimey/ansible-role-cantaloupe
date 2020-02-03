@@ -50,3 +50,10 @@
     path: "{{ cantaloupe_install_root }}/cantaloupe/tmp"
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
+
+- name: Create filesystem cache directory
+  file:
+    state: directory
+    path: /var/cache/cantaloupe
+    owner: "{{ cantaloupe_user }}"
+    group: "{{ cantaloupe_group }}"
