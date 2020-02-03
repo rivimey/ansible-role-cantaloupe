@@ -35,3 +35,5 @@ cantaloupe_S3Source_secret_key: ""
 cantaloupe_S3Source_bucket_name: ""
 
 cantaloupe_S3Source_path_prefix: ""
+
+cantaloupe_fallback_processor: ImageMagickProcessor

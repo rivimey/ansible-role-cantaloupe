@@ -31,48 +31,6 @@
     regexp: '^endpoint.admin.secret'
     line: endpoint.admin.secret = {{ cantaloupe_admin_password }}
 
-- name: Set static source
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^source.static'
-    line: source.static = {{ cantaloupe_source_static }}
-
-- name: Set HTTP source URL prefix
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^HttpSource.BasicLookupStrategy.url_prefix'
-    line: HttpSource.BasicLookupStrategy.url_prefix = {{ cantaloupe_HttpSource_BasicLookupStrategy_url_prefix }}
-
-- name: Set S3 source endpoint
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.endpoint'
-    line: S3Source.endpoint = {{ cantaloupe_S3Source_endpoint }}
-
-- name: Set S3 source Access Key
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.access_key_id'
-    line: S3Source.access_key_id = {{ cantaloupe_S3Source_access_key_id }}
-
-- name: Set S3 source Secret Key
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.secret_key'
-    line: S3Source.secret_key = {{ cantaloupe_S3Source_secret_key }}
-
-- name: Set S3 source bucket name
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.BasicLookupStrategy.bucket.name'
-    line: S3Source.BasicLookupStrategy.bucket.name = {{ cantaloupe_S3Source_bucket_name }}
-
-- name: Set S3 source path prefix
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.BasicLookupStrategy.path_prefix'
-    line: S3Source.BasicLookupStrategy.path_prefix = {{ cantaloupe_S3Source_path_prefix }}
-
 - name: Enable rolling general application log
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"

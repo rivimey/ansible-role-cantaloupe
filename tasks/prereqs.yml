@@ -1,0 +1,14 @@
+---
+- name: install dependencies with yum
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - unzip
+    - wget
+
+- name: create cantaloupe user
+  user:
+    name: "{{ cantaloupe_user }}"
+    shell: /bin/bash
+    state: present

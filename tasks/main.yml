@@ -1,21 +1,13 @@
 ---
-- name: install dependencies with yum
-  yum:
-    name: "{{ packages }}"
-  vars:
-    packages:
-    - unzip
-    - wget
-
-- name: create cantaloupe user
-  user:
-    name: cantaloupe
-    shell: /bin/bash
-    state: present
+- include: prereqs.yml
 
 - include: install.yml
 
-- include: config.yml
+- include: config_general.yml
+
+- include: config_sources.yml
+
+- include: config_processors.yml
 
 - include: service.yml
 

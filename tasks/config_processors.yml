@@ -1,0 +1,18 @@
+---
+- name: Set to manual selection strategy
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^processor.selection_strategy'
+    line: processor.selection_strategy = ManualSelectionStrategy
+
+- name: Install ImageMagick as fallback processor # Recommended to eliminate warnings about unsupported formats
+  yum:
+    name: ImageMagick
+    state: present
+  when: cantaloupe_fallback_processor == "ImageMagickProcessor"
+
+- name: Set fallback processor
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^processor.ManualSelectionStrategy.fallback'
+    line: processor.ManualSelectionStrategy.fallback = "{{ cantaloupe_fallback_processor }}"
