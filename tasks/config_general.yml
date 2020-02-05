@@ -43,6 +43,12 @@
     regexp: '^log.application.RollingFileAppender.pathname'
     line: log.application.RollingFileAppender.pathname = {{ cantaloupe_log_path }}/application.log
 
+- name: Set rolling general log filename pattern
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern'
+    line: log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ cantaloupe_log_path }}/application-%d{yyyy-MM-dd}.log
+
 - name: Enable rolling error log
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
@@ -54,3 +60,9 @@
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     regexp: '^log.error.RollingFileAppender.pathname'
     line: log.error.RollingFileAppender.pathname = {{ cantaloupe_log_path }}/error.log
+
+- name: Set rolling error log filename pattern
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern'
+    line: log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ cantaloupe_log_path }}/error-%d{yyyy-MM-dd}.log
