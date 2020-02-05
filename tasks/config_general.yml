@@ -31,6 +31,12 @@
     regexp: '^endpoint.admin.secret'
     line: endpoint.admin.secret = {{ cantaloupe_admin_password }}
 
+- name: Set log level
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^log.application.level'
+    line: log.application.level = {{ cantaloupe_log_level }}
+
 - name: Enable rolling general application log
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
