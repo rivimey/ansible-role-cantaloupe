@@ -22,3 +22,16 @@
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     regexp: '^processor.ManualSelectionStrategy.webp'
     line: 'processor.ManualSelectionStrategy.webp = '
+
+- name: Install ffmpeg processor # Eliminates warnings about missing video processor
+  block:
+    - name: Install repo
+      yum:
+        name: "http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
+        state: present
+    - name: Install packages
+      yum:
+        name:
+          - ffmpeg
+          - ffmpeg-devel
+        state: present
