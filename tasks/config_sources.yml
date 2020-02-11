@@ -40,3 +40,15 @@
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     regexp: '^S3Source.BasicLookupStrategy.path_prefix'
     line: S3Source.BasicLookupStrategy.path_prefix = {{ cantaloupe_S3Source_path_prefix }}
+
+- name: Set S3 chunking
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^S3Source.chunking.enabled'
+    line: S3Source.chunking.enabled = {{ cantaloupe_S3Source_chunking_enabled }}
+
+- name: Set S3 chunking cache
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^S3Source.chunking.cache.enabled'
+    line: S3Source.chunking.cache.enabled = {{ cantaloupe_S3Source_chunking_cache_enabled }}
