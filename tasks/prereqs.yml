@@ -12,3 +12,4 @@
     name: "{{ cantaloupe_user }}"
     shell: /bin/bash
     state: present
+  ignore_errors: True
