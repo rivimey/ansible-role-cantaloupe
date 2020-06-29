@@ -6,6 +6,7 @@
     packages:
     - unzip
     - wget
+    - java
     - libselinux-python
 
 - name: Add repository
