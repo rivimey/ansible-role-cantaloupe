@@ -6,6 +6,13 @@
     packages:
     - unzip
     - wget
+    - libselinux-python
+
+- name: Add repository
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: https://dl.fedoraproject.org/pub/epel/7/x86_64
 
 - name: create cantaloupe user
   user:
