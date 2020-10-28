@@ -22,7 +22,7 @@ cantaloupe_is_dev: true
 
 cantaloupe_http_port: 8182
 
-cantaloupe_source_static: HttpSource
+cantaloupe_source_static: FilesystemSource
 
 cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: ""
 

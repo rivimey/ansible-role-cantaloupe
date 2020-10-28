@@ -5,6 +5,23 @@
     regexp: '^processor.selection_strategy'
     line: processor.selection_strategy = ManualSelectionStrategy
 
+- name: Copy kakadu libs
+  command: cp {{ cantaloupe_symlink }}/deps/Linux-x86-64/lib/libkdu* /usr/lib64/
+  args:
+    creates: /usr/lib64/libkdu_a7AR.so
+
+- name: Ensure permissions of kakadu libraries are correct
+  file:
+    path: "{{ item }}"
+    state: present
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - /usr/lib64/libkdu_a7AR.so
+    - /usr/lib64/libkdu_jni.so
+    - /usr/lib64/libkdu_v7AR.so
+
 - name: Install ImageMagick as fallback processor # Recommended to eliminate warnings about unsupported formats
   yum:
     name: ImageMagick
@@ -17,11 +34,11 @@
     regexp: '^processor.ManualSelectionStrategy.fallback'
     line: processor.ManualSelectionStrategy.fallback = {{ cantaloupe_fallback_processor }}
 
-- name: Blank out buggy webp processor
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^processor.ManualSelectionStrategy.webp'
-    line: 'processor.ManualSelectionStrategy.webp = '
+# - name: Blank out buggy webp processor
+#   lineinfile:
+#     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+#     regexp: '^processor.ManualSelectionStrategy.webp'
+#     line: 'processor.ManualSelectionStrategy.webp = '
 
 - name: Install ffmpeg processor # Eliminates warnings about missing video processor
   block:
