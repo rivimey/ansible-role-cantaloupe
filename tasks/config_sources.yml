@@ -5,6 +5,12 @@
     regexp: '^source.static'
     line: source.static = {{ cantaloupe_source_static }}
 
+- name: Set FilesystemSource source path prefix
+  lineinfile:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: '^FilesystemSource.BasicLookupStrategy.path_prefix'
+    line: FilesystemSource.BasicLookupStrategy.path_prefix = {{ cantaloupe_FilesystemSource_BasicLookupStrategy_path_prefix }}
+
 - name: Set HTTP source URL prefix
   lineinfile:
     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"

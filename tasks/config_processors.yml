@@ -13,10 +13,10 @@
 - name: Ensure permissions of kakadu libraries are correct
   file:
     path: "{{ item }}"
-    state: present
+    state: file
     owner: root
     group: root
-    mode: 0644
+    mode: 0755
   loop:
     - /usr/lib64/libkdu_a7AR.so
     - /usr/lib64/libkdu_jni.so
