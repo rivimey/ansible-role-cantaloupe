@@ -6,7 +6,7 @@
     line: processor.selection_strategy = ManualSelectionStrategy
 
 - name: Copy kakadu libs
-  command: cp {{ cantaloupe_symlink }}/deps/Linux-x86-64/lib/libkdu* /usr/lib64/
+  command: cp -r {{ cantaloupe_symlink }}/deps/Linux-x86-64/lib/. /usr/lib64/
   args:
     creates: /usr/lib64/libkdu_a7AR.so
 
