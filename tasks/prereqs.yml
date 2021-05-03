@@ -6,7 +6,7 @@
     packages:
     - unzip
     - wget
-    - java
+    - java-1.8.0-openjdk
     - libselinux-python
 
 - name: Add repository
