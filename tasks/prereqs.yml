@@ -7,7 +7,20 @@
     - unzip
     - wget
     - java-1.8.0-openjdk
-    - libselinux-python
+
+- name: Install selinux-python dependency
+  block:
+    - name: Install for CentOS
+      yum:
+        name: libselinux-python
+        state: present
+  rescue:
+    - ansible.builtin.debug:
+         msg: "Try different package for RHEL"
+    - name: Install for RHEL
+      yum:
+        name: libselinux-python3
+        state: present
 
 - name: Add repository
   yum_repository:
