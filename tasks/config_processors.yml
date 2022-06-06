@@ -55,3 +55,4 @@
           - epel
           - nux-desktop
         state: present
+  when: cantaloupe_install_ffmpeg | bool
