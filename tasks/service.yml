@@ -2,6 +2,13 @@
 - name: Create systemd unit file
   template:
     src: cantaloupe.service.j2
+    dest: "{{ cantaloupe_properties_path }}/cantaloupe.service"
+    mode: 0644
+
+- name: Symlink to systemd path
+  file:
+    state: link
+    src: "{{ cantaloupe_properties_path }}/cantaloupe.service"
     dest: "{{ cantaloupe_systemd_path }}/cantaloupe.service"
 
 - name: Reload systemd daemon
