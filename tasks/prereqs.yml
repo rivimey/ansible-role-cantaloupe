@@ -22,11 +22,18 @@
         name: libselinux-python3
         state: present
 
-- name: Add repository
+- name: Install EPEL 7
   yum_repository:
     name: epel
     description: EPEL YUM repo
     baseurl: https://dl.fedoraproject.org/pub/epel/7/x86_64
+  when: epel_release_version == "7" or epel_release_version is not defined
+
+- name: Install EPEL 8
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+    state: latest
+  when: epel_release_version == "8"
 
 - name: create cantaloupe user
   user:
