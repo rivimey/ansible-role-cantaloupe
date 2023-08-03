@@ -1,9 +1,37 @@
 [Unit]
 Description=Cantaloupe IIIF Image Server
+After: network-online.target
 
 [Service]
+Type=simple
 ExecStart={{ cantaloupe_start_command }}
 User={{ cantaloupe_user }}
+Group={{ cantaloupe_group | default( cantaloupe_user ) }}
+
+Restart=always
+
+# Systemd can run the process in a more protected environment
+# which can prevent bugs becoming as dangerous as they might be.
+
+SystemCallFilter=~@obsolete
+PrivateTmp=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectHome=yes
+NoNewPrivileges=yes
+ProtectClock=yes
+ProtectControlGroups=yes
+
+# Consider adding these and/or others:
+#ProtectSystem=full
+#NoNewPrivileges=true
+#PrivateDevices=true
+#LockPersonality=yes
+#MemoryDenyWriteExecute=yes
 
 [Install]
 WantedBy=multi-user.target
