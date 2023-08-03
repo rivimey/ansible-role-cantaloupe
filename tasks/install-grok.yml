@@ -1,0 +1,42 @@
+---
+
+- name: Create extras directory
+  include_task: install-extras.yml
+
+- name: Check for Grok Archive
+  stat:
+    path: "{{ cantaloupe_extras }}/grok-ubuntu-{{ cantaloupe_grok_version }}.zip"
+  register: cantaloupe_grok_zip
+
+- name: Fetch Grok Image Processor library
+  copy:
+    remote_src: yes
+    src: https://github.com/GrokImageCompression/grok/releases/download/v{{ cantaloupe_grok_version }}/grok-ubuntu-latest.zip
+    dest: "{{ cantaloupe_extras }}/grok-ubuntu-{{ cantaloupe_grok_version }}.zip"
+    owner: "{{ cantaloupe_user }}"
+    group: "{{ cantaloupe_group }}"
+  when: not cantaloupe_grok_zip.stat.exists
+
+- name: Expand Grok Archive
+  unarchive:
+    src: "{{ cantaloupe_extras }}/grok-ubuntu-{{ cantaloupe_grok_version }}.zip"
+    dest: "{{ cantaloupe_extras }}"
+    owner: "{{ cantaloupe_user }}"
+    group: "{{ cantaloupe_group }}"
+    creates: "{{ cantaloupe_extras }}/grok-ubuntu-latest"
+  when: not cantaloupe_grok_zip.stat.exists
+
+- name: Copy files to destination directory
+  synchronize:
+    src: "{{ cantaloupe_extras }}/grok-ubuntu-latest/"
+    dest: "{{ cantaloupe_extras }}"
+    archive: true
+  when: not cantaloupe_grok_zip.stat.exists
+
+- name: Delete intermediate directory
+  file:
+    path: "{{ cantaloupe_extras }}/grok-ubuntu-latest"
+    state: absent
+    recursive: true
+  when: not cantaloupe_grok_zip.stat.exists
+

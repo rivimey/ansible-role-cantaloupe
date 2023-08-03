@@ -1,0 +1,15 @@
+---
+
+- name: Create extras directory
+  file:
+    state: directory
+    path: "{{ cantaloupe_extras }}/{{ item }}"
+    owner: "{{ cantaloupe_user }}"
+    group: "{{ cantaloupe_group }}"
+  loop:
+    - ''
+    - bin
+    - sbin
+    - include
+    - lib
+    - share
