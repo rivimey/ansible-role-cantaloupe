@@ -5,24 +5,43 @@
   vars:
     packages:
     - unzip
-    - wget
-    - openjdk-18-jre
+    - "openjdk-{{ cantaloupe_java_version }}-jdk"
 
-- name: Install ImageMagick as fallback processor # Recommended to eliminate warnings about unsupported formats
+- name: Check for ImageMagick as fallback processor
+  assert:
+    that: cantaloupe_fallback_processor != "ImageMagickProcessor"
+  when: cantaloupe_version is version_compare(5.0, 'lt')  # Not supported on v5+
+
+- name: Always Install ImageMagick it is the fallback processor
   apt:
     name: imagemagick
     state: present
-  when: cantaloupe_fallback_processor == "ImageMagickProcessor"
+  when:
+  - cantaloupe_fallback_processor == "ImageMagickProcessor"
+  - cantaloupe_version is version_compare(5.0, 'lt')
 
-- name: Install ffmpeg processor # Eliminates warnings about missing video processor
-  apt:
-    name: ffmpeg
-    state: present
+- name: Always Install FFmpeg it is the fallback processor
+  include_task: install-ffmpeg.yml
+  when:
+  - cantaloupe_fallback_processor == "FfmpegProcessor"
+
+- name: Install ffmpeg processor
+  include_task: install-ffmpeg.yml
   when: cantaloupe_install_ffmpeg | bool
 
-- name: create cantaloupe user
-  user:
-    name: "{{ cantaloupe_user }}"
-    shell: /bin/bash
-    state: present
-  ignore_errors: True
+- name: Install grok processor
+  include_task: install-grok.yml
+  when: cantaloupe_install_grok | bool
+
+- name: Install pdfbox processor
+  include_task: install-pdfbox.yml
+  when: cantaloupe_install_pdfbox | bool
+
+- name: Install openjpeg processor
+  include_task: install-openjpeg.yml
+  when: cantaloupe_install_openjpeg | bool
+
+- name: Install turbojpeg processor
+  include_task: install-turbojpeg.yml
+  when: cantaloupe_install_turbojpeg | bool
+
