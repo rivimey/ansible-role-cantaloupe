@@ -1,0 +1,67 @@
+---
+- name: install dependencies with yum
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - unzip
+    - wget
+    - java-1.8.0-openjdk
+
+- name: Install selinux-python dependency
+  block:
+    - name: Install for CentOS
+      yum:
+        name: libselinux-python
+        state: present
+  rescue:
+    - ansible.builtin.debug:
+         msg: "Try different package for RHEL"
+    - name: Install for RHEL
+      yum:
+        name: libselinux-python3
+        state: present
+
+- name: Install ImageMagick as fallback processor # Recommended to eliminate warnings about unsupported formats
+  yum:
+    name: ImageMagick
+    state: present
+  when:
+  - cantaloupe_fallback_processor == "ImageMagickProcessor"
+
+- name: Install ffmpeg processor # Eliminates warnings about missing video processor
+  block:
+    - name: Install repo
+      yum:
+        name: "http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
+        state: present
+    - name: Install packages
+      yum:
+        name:
+          - ffmpeg
+          - ffmpeg-devel
+        enablerepo:
+          - epel
+          - nux-desktop
+        state: present
+  when: cantaloupe_install_ffmpeg | bool
+
+- name: Install EPEL 7
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: https://dl.fedoraproject.org/pub/epel/7/x86_64
+  when: epel_release_version == "7" or epel_release_version is not defined
+
+- name: Install EPEL 8
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+    state: latest
+  when: epel_release_version == "8"
+
+- name: create cantaloupe user
+  user:
+    name: "{{ cantaloupe_user }}"
+    shell: /bin/bash
+    state: present
+  ignore_errors: True

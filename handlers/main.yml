@@ -1,0 +1,7 @@
+---
+
+- name: reload cantaloupe
+  service:
+    name: cantaloupe
+    state: reloaded
+

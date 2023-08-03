@@ -1,0 +1,28 @@
+---
+- name: Install package dependencies with apt
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - unzip
+    - wget
+    - openjdk-18-jre
+
+- name: Install ImageMagick as fallback processor # Recommended to eliminate warnings about unsupported formats
+  apt:
+    name: imagemagick
+    state: present
+  when: cantaloupe_fallback_processor == "ImageMagickProcessor"
+
+- name: Install ffmpeg processor # Eliminates warnings about missing video processor
+  apt:
+    name: ffmpeg
+    state: present
+  when: cantaloupe_install_ffmpeg | bool
+
+- name: create cantaloupe user
+  user:
+    name: "{{ cantaloupe_user }}"
+    shell: /bin/bash
+    state: present
+  ignore_errors: True

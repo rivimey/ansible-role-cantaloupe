@@ -1,6 +1,14 @@
 ---
 # Cantaloupe version
-cantaloupe_version: 4.1.3
+cantaloupe_version: 5.0.5
+
+# Cantaloupe runs on Java:
+cantaloupe_java: java
+cantaloupe_min_java_version: 11.0.0
+
+# If installing Java, the openjdk version to install
+cantaloupe_java_version: 18
+
 # Where to extract the cantaloupe archive
 cantaloupe_install_root: /opt
 # Target of a symlink from the extracted cantaloupe archive
@@ -12,34 +20,70 @@ cantaloupe_user: cantaloupe
 # Cantaloupe group
 cantaloupe_group: cantaloupe
 
-cantaloupe_properties_path: /opt/cantaloupe/
+# 
+# cantaloupe_admin_password: [VAULT]
 
-cantaloupe_start_command: "/bin/java -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties -Xms2g -Xmx8g -jar {{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
+cantaloupe_properties_path: /opt/cantaloupe
 
-cantaloupe_systemd_path: "/etc/systemd/system/multi-user.target.wants"
+# Where to put the real services file:
+cantaloupe_services_path: "/etc/systemd/system"
+# Location systemd needs the services file to be:
+cantaloupe_systemd_path: "/etc/systemd/system"
+# If above are different, a link will be made in systemd_path to services_path
+
+# Desired state of service after run. Normally 'started'
+cantaloupe_service_state: "started"
+
+# Configure amount of RAM Java is allowed:
+# - Xmx is Java maximum memory allocation (heap size)
+# - Xms is Java initial memory allocation (heap size)
+# Could also add Xss (thread stack size)
+cantaloupe_memsize: "-Xms1g -Xmx2g"
+
+cantaloupe_start_command: "{{ cantaloupe_java }} -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties {{ cantaloupe_memsize }} -jar {{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
+
+# Built-in processors are Java2dProcessor, TurboJpegProcessor,
+# KakaduNativeProcessor, OpenJpegProcessor, GrokProcessor, JaiProcessor,
+# PdfBoxProcessor, and FfmpegProcessor.
 
 cantaloupe_is_dev: true
-
 cantaloupe_http_port: 8182
+cantaloupe_fallback_processor: ImageMagickProcessor
+cantaloupe_log_level: debug
 
+cantaloupe_install_ffmpeg: true
+
+# Each source can be in BasicLookupStrategy or ScriptLookupStrategy;
+# Currently only the former is supported by this config.
+
+# Uses one source for all requests. Available values are `FilesystemSource`,
+# `HttpSource`, `JdbcSource`, `S3Source`, and `AzureStorageSource`.
 cantaloupe_source_static: FilesystemSource
 
-cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: ""
+cantaloupe_HttpSource_url_prefix: ""
+cantaloupe_HttpSource_url_suffix: ""
+cantaloupe_HttpSource_chunking_enabled: "true"
+cantaloupe_HttpSource_chunking_cache_enabled: "true"
+cantaloupe_HttpSource_auth_name: ""
+cantaloupe_HttpSource_auth_secret: ""
+
+cantaloupe_FilesystemSource_path_prefix: "{{ cantaloupe_properties_path }}"
+cantaloupe_FilesystemSource_path_suffix: ""
 
 cantaloupe_S3Source_endpoint: ""
-
 cantaloupe_S3Source_access_key_id: ""
-
 cantaloupe_S3Source_secret_key: ""
-
 cantaloupe_S3Source_bucket_name: ""
-
 cantaloupe_S3Source_path_prefix: ""
-
+cantaloupe_S3Source_path_suffix: ""
 cantaloupe_S3Source_chunking_enabled: "true"
-
 cantaloupe_S3Source_chunking_cache_enabled: "true"
 
-cantaloupe_fallback_processor: ImageMagickProcessor
+cantaloupe_AzureStorageSource_account_name: ""
+cantaloupe_AzureStorageSource_account_key: ""
+cantaloupe_AzureStorageSource_container_name: ""
+cantaloupe_AzureStorageSource_path_prefix: ""
+cantaloupe_AzureStorageSource_path_suffix: ""
+cantaloupe_AzureStorageSource_chunking_enabled: "true"
+cantaloupe_AzureStorageSource_chunking_cache_enabled: "true"
 
-cantaloupe_log_level: debug

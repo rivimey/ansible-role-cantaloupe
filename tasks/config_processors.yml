@@ -1,9 +1,21 @@
 ---
-- name: Set to manual selection strategy
+- name: Define Processor Config changes to make
+  set_fact:
+    cantaloupe_processor_updates:
+    - { rexp: '^processor.selection_strategy',
+        line: "processor.selection_strategy = ManualSelectionStrategy" }
+    - { rexp: '^processor.ManualSelectionStrategy.fallback',
+        line: "processor.ManualSelectionStrategy.fallback = {{ cantaloupe_fallback_processor }}" }
+# - name: Blank out buggy webp processor
+#    - { rexp: '^processor.ManualSelectionStrategy.webp'
+#        line: 'processor.ManualSelectionStrategy.webp = '
+
+- name: Make Processor changes
   lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^processor.selection_strategy'
-    line: processor.selection_strategy = ManualSelectionStrategy
+    path: "{{ cantaloupe_properties }}"
+    regexp: "{{ item.rexp }}"
+    line: "{{ item.line }}"
+  loop: "{{ cantaloupe_processor_updates }}"
 
 - name: Copy kakadu libs
   command: cp -r {{ cantaloupe_symlink }}/deps/Linux-x86-64/lib/. /usr/lib64/
@@ -21,38 +33,3 @@
     - /usr/lib64/libkdu_a7AR.so
     - /usr/lib64/libkdu_jni.so
     - /usr/lib64/libkdu_v7AR.so
-
-- name: Install ImageMagick as fallback processor # Recommended to eliminate warnings about unsupported formats
-  yum:
-    name: ImageMagick
-    state: present
-  when: cantaloupe_fallback_processor == "ImageMagickProcessor"
-
-- name: Set fallback processor
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^processor.ManualSelectionStrategy.fallback'
-    line: processor.ManualSelectionStrategy.fallback = {{ cantaloupe_fallback_processor }}
-
-# - name: Blank out buggy webp processor
-#   lineinfile:
-#     path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-#     regexp: '^processor.ManualSelectionStrategy.webp'
-#     line: 'processor.ManualSelectionStrategy.webp = '
-
-- name: Install ffmpeg processor # Eliminates warnings about missing video processor
-  block:
-    - name: Install repo
-      yum:
-        name: "http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
-        state: present
-    - name: Install packages
-      yum:
-        name:
-          - ffmpeg
-          - ffmpeg-devel
-        enablerepo:
-          - epel
-          - nux-desktop
-        state: present
-  when: cantaloupe_install_ffmpeg | bool

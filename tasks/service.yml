@@ -2,14 +2,25 @@
 - name: Create systemd unit file
   template:
     src: cantaloupe.service.j2
-    dest: "{{ cantaloupe_properties_path }}/cantaloupe.service"
+    dest: "{{ cantaloupe_services_path }}/cantaloupe.service"
     mode: 0644
+  register: cantaloupe_service
+  when: ansible_service_mgr == 'systemd'
 
 - name: Symlink to systemd path
   file:
     state: link
-    src: "{{ cantaloupe_properties_path }}/cantaloupe.service"
+    src: "{{ cantaloupe_services_path }}/cantaloupe.service"
     dest: "{{ cantaloupe_systemd_path }}/cantaloupe.service"
+  when:
+  - cantaloupe_systemd_path != cantaloupe_services_path
+  - ansible_service_mgr == 'systemd'
+  register: cantaloupe_service_link
 
-- name: Reload systemd daemon
-  command: "systemctl daemon-reload"
+- name: Enable Service
+  systemd:
+    name: cantaloupe.service
+    enabled: true
+    daemon_reload: "{{ cantaloupe_service.changed or cantaloupe_service_link.changed }}"
+    state: "{{ cantaloupe_service_state |default('started') }}"
+  when: ansible_service_mgr == 'systemd'

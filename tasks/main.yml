@@ -1,7 +1,15 @@
 ---
-- include: prereqs.yml
 
-- include: install.yml
+- include: java.yml
+
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Install Cantaloupe
+  include: install.yml
 
 - include: config_general.yml
 

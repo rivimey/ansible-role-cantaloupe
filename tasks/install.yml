@@ -2,7 +2,7 @@
 - name: Install Cantaloupe
   unarchive:
     remote_src: yes
-    src: https://github.com/medusa-project/cantaloupe/releases/download/v{{ cantaloupe_version }}/cantaloupe-{{ cantaloupe_version }}.zip
+    src: https://github.com/cantaloupe-project/cantaloupe/releases/download/v{{ cantaloupe_version }}/cantaloupe-{{ cantaloupe_version }}.zip
     dest: "{{ cantaloupe_install_root }}"
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
@@ -17,19 +17,107 @@
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
 
-- name: Copy Cantaloupe config file # Stopped using template module because forwards-compatibility kept breaking
-  command: "cp {{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample {{ cantaloupe_properties_path }}/cantaloupe.properties"
+# Filename which stores the old checksum
+- name: Set Sample Config Hashsum filename
+  set_fact:
+    cantaloupe_sample_config_hash_filename: "{{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample.shasum"
+    cantaloupe_sample_config_file_changed: false
 
-- name: Fix ownership and permissions of Cantaloupe config file
-  file:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+- name: Get Hash of Cantaloupe sample config file
+  stat:
+    path: "{{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample"
+    get_checksum: yes
+    checksum_algorithm: sha256
+    get_md5: no
+    mime: no
+  register: cantaloupe_sample_config_hash
+
+- set_fact:
+    cantaloupe_sample_config_hash: "{{ cantaloupe_sample_config_hash.stat.checksum }}"
+
+- name: Check if an old checksum file exists
+  stat:
+    path: "{{ cantaloupe_sample_config_hash_filename }}"
+  become: yes
+  register: cantaloupe_sample_config_hash_filename_stat
+
+- block:
+  - name: Read old hash
+    slurp:
+      src: "{{ cantaloupe_sample_config_hash_filename }}"
+    register: cantaloupe_sample_config_old_hash
+
+  - set_fact:
+      cantaloupe_sample_config_old_hash: "{{ cantaloupe_sample_config_old_hash['content'] | b64decode }}"
+
+  - debug: 
+      msg: "Old Sample Config hash{{':'}} {{ cantaloupe_sample_config_old_hash }}"
+
+  - name: Compare hashes
+    set_fact:
+      cantaloupe_sample_config_file_changed: true
+    when: cantaloupe_sample_config_old_hash != cantaloupe_sample_config_hash
+    notify: reload cantaloupe
+  when: cantaloupe_sample_config_hash_filename_stat.stat.exists
+
+# When the file with the old hashsum does not exist, the file is new
+- name: Sample Config has no old hash file, mark as changed
+  set_fact:
+    cantaloupe_sample_config_file_changed: true
+  notify: reload cantaloupe
+  when: not cantaloupe_sample_config_hash_filename_stat.stat.exists
+
+- debug: 
+    msg: "Sample Config file hash{{':'}} {{ cantaloupe_sample_config_hash }}"
+
+- name: Update the Sample Config file checksum (as delivered)
+  copy:
+    content: "{{ cantaloupe_sample_config_hash }}"
+    dest: "{{ cantaloupe_sample_config_hash_filename }}"
+  when: cantaloupe_sample_config_file_changed
+
+- name: Copy Cantaloupe config file
+  copy:
+    remote_src: true
+    src: "{{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample"
+    dest: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
     mode: 0755
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
+  when: cantaloupe_sample_config_file_changed
 
-- name: Fix ownership and permissions of Cantaloupe war file
-  file:
+- name: Fixup CRLF in config file
+  replace:
+    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    regexp: "\r\n"
+    replace: "\n"
+  when: cantaloupe_sample_config_file_changed
+
+- name: Cantaloupe archive file (war)
+  stat:
     path: "{{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
+  register: cantaloupe_war_file
+  ignore_errors: true
+
+- name: Set name of archive file (war)
+  set_fact:
+    cantaloupe_archive_file: "{{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
+  when: cantaloupe_war_file.stat.exists
+
+- name: Cantaloupe archive file (jar)
+  stat:
+    path: "{{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.jar"
+  register: cantaloupe_jar_file
+  ignore_errors: true
+
+- name: Set name of archive file (jar)
+  set_fact:
+    cantaloupe_archive_file: "{{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.jar"
+  when: cantaloupe_jar_file.stat.exists
+
+- name: Fix ownership and permissions of Cantaloupe jar file
+  file:
+    path: "{{ cantaloupe_archive_file }}"
     mode: 0755
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
@@ -54,3 +142,8 @@
     path: /var/cache/cantaloupe
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
+
+- name: Define Properties filename
+  set_fact:
+    cantaloupe_properties: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+

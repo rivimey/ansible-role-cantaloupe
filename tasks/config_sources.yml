@@ -1,60 +1,59 @@
 ---
-- name: Set static source
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^source.static'
-    line: source.static = {{ cantaloupe_source_static }}
+- name: Define Source Config changes to make
+  set_fact:
+    cantaloupe_source_updates:
+    - { rexp: '^source.static',
+        line: "source.static = {{ cantaloupe_source_static }}" }
 
-- name: Set FilesystemSource source path prefix
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^FilesystemSource.BasicLookupStrategy.path_prefix'
-    line: FilesystemSource.BasicLookupStrategy.path_prefix = {{ cantaloupe_FilesystemSource_BasicLookupStrategy_path_prefix }}
+    # Filesystem
+    - { rexp: '^FilesystemSource.BasicLookupStrategy.path_prefix',
+        line: "FilesystemSource.BasicLookupStrategy.path_prefix = {{ cantaloupe_FilesystemSource_path_prefix }}" }
 
-- name: Set HTTP source URL prefix
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^HttpSource.BasicLookupStrategy.url_prefix'
-    line: HttpSource.BasicLookupStrategy.url_prefix = {{ cantaloupe_HttpSource_BasicLookupStrategy_url_prefix }}
+    # HTTP(s)
+    - { rexp: '^HttpSource.BasicLookupStrategy.url_prefix',
+        line: "HttpSource.BasicLookupStrategy.url_prefix = {{ cantaloupe_HttpSource_url_prefix }}" }
+    - { rexp: '^HttpSource.BasicLookupStrategy.url_suffix',
+        line: "HttpSource.BasicLookupStrategy.url_suffix = {{ cantaloupe_HttpSource_url_suffix }}" }
+    - { rexp: '^HttpSource.chunking.enabled',
+        line: "HttpSource.chunking.enabled = {{ cantaloupe_HttpSource_chunking_enabled }}" }
+    - { rexp: '^HttpSource.chunking.cache.enabled',
+        line: "HttpSource.chunking.cache.enabled = {{ cantaloupe_HttpSource_chunking_cache_enabled }}" }
 
-- name: Set S3 source endpoint
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.endpoint'
-    line: S3Source.endpoint = {{ cantaloupe_S3Source_endpoint }}
+    # AWS S3
+    - { rexp: '^S3Source.endpoint',
+        line: "S3Source.endpoint = {{ cantaloupe_S3Source_endpoint }}" }
+    - { rexp: '^S3Source.access_key_id',
+        line: "S3Source.access_key_id = {{ cantaloupe_S3Source_access_key_id }}" }
+    - { rexp: '^S3Source.secret_key',
+        line: "S3Source.secret_key = {{ cantaloupe_S3Source_secret_key }}" }
+    - { rexp: '^S3Source.BasicLookupStrategy.bucket.name',
+        line: "S3Source.BasicLookupStrategy.bucket.name = {{ cantaloupe_S3Source_bucket_name }}" }
+    - { rexp: '^S3Source.BasicLookupStrategy.path_prefix',
+        line: "S3Source.BasicLookupStrategy.path_prefix = {{ cantaloupe_S3Source_path_prefix }}" }
+    - { rexp: '^S3Source.chunking.enabled',
+        line: "S3Source.chunking.enabled = {{ cantaloupe_S3Source_chunking_enabled }}" }
+    - { rexp: '^S3Source.chunking.cache.enabled',
+        line: "S3Source.chunking.cache.enabled = {{ cantaloupe_S3Source_chunking_cache_enabled }}" }
 
-- name: Set S3 source Access Key
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.access_key_id'
-    line: S3Source.access_key_id = {{ cantaloupe_S3Source_access_key_id }}
+    # Azure Storage
+    - { rexp: '^AzureStorageSource.account_name',
+        line: "AzureStorageSource.account_name = {{ cantaloupe_AzureStorageSource_account_name }}" }
+    - { rexp: '^AzureStorageSource.account_key',
+        line: "AzureStorageSource.account_key = {{ cantaloupe_AzureStorageSource_account_key }}" }
+    - { rexp: '^AzureStorageSource.BasicLookupStrategy.container.name',
+        line: "AzureStorageSource.BasicLookupStrategy.container.name = {{ cantaloupe_AzureStorageSource_container_name }}" }
+    - { rexp: '^AzureStorageSource.BasicLookupStrategy.path_prefix',
+        line: "AzureStorageSource.BasicLookupStrategy.path_prefix = {{ cantaloupe_AzureStorageSource_path_prefix }}" }
+    - { rexp: '^AzureStorageSource.BasicLookupStrategy.path_suffix',
+        line: "AzureStorageSource.BasicLookupStrategy.path_suffix = {{ cantaloupe_AzureStorageSource_path_suffix }}" }
+    - { rexp: '^AzureStorageSource.chunking.enabled',
+        line: "AzureStorageSource.chunking.enabled = {{ cantaloupe_AzureStorageSource_chunking_enabled }}" }
+    - { rexp: '^AzureStorageSource.chunking.cache.enabled',
+        line: "AzureStorageSource.chunking.cache.enabled = {{ cantaloupe_AzureStorageSource_chunking_cache_enabled }}" }
 
-- name: Set S3 source Secret Key
+- name: Make changes
   lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.secret_key'
-    line: S3Source.secret_key = {{ cantaloupe_S3Source_secret_key }}
-
-- name: Set S3 source bucket name
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.BasicLookupStrategy.bucket.name'
-    line: S3Source.BasicLookupStrategy.bucket.name = {{ cantaloupe_S3Source_bucket_name }}
-
-- name: Set S3 source path prefix
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.BasicLookupStrategy.path_prefix'
-    line: S3Source.BasicLookupStrategy.path_prefix = {{ cantaloupe_S3Source_path_prefix }}
-
-- name: Set S3 chunking
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.chunking.enabled'
-    line: S3Source.chunking.enabled = {{ cantaloupe_S3Source_chunking_enabled }}
-
-- name: Set S3 chunking cache
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^S3Source.chunking.cache.enabled'
-    line: S3Source.chunking.cache.enabled = {{ cantaloupe_S3Source_chunking_cache_enabled }}
+    path: "{{ cantaloupe_properties }}"
+    regexp: "{{ item.rexp }}"
+    line: "{{ item.line }}"
+  loop: "{{ cantaloupe_source_updates }}"

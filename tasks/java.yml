@@ -1,0 +1,20 @@
+---
+
+- set_fact:
+    cantaloupe_java: java
+  when: cantaloupe_java is not defined
+
+- name: Get installed Java version
+  shell: "{{ cantaloupe_java }} -version 2>&1 | awk '/ version / {v=$3; gsub(\"\\\"\", \"\", v); print v;}'"
+  register: cantaloupe_java_version
+  ignore_errors: true
+  changed_when: false
+
+- set_fact:
+    cantaloupe_java_version: "{{ cantaloupe_java_version.stdout }}"
+
+- name: Check java version sufficient
+  assert:
+    that:
+      - "cantaloupe_java_version is version('{{ cantaloupe_min_java_version }}', 'ge', version_type='semver')"
+

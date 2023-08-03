@@ -1,74 +1,37 @@
 ---
-- name: Set application temp directory
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^temp_pathname'
-    line: temp_pathname = {{ cantaloupe_install_root }}/cantaloupe/tmp
 
-- name: Set HTTP port
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^http.port'
-    line: http.port = {{ cantaloupe_http_port }}
+- name: Define General Config changes to make
+  set_fact:
+    cantaloupe_general_updates:
+    - { rexp: '^temp_pathname',
+        line: "temp_pathname = {{ cantaloupe_install_root }}/cantaloupe/tmp" }
+    - { rexp: '^http.port',
+        line: "http.port = {{ cantaloupe_http_port }}" }
+    - { rexp: '^endpoint.admin.enabled',
+        line: "endpoint.admin.enabled = {{ cantaloupe_is_dev|bool }}" }
+    - { rexp: '^endpoint.api.enabled',
+        line: "endpoint.api.enabled = {{ cantaloupe_is_dev|bool }}" }
+    - { rexp: '^endpoint.admin.secret',
+        line: "endpoint.admin.secret = {{ cantaloupe_admin_password }}" }
+    - { rexp: '^log.application.level',
+        line: "log.application.level = {{ cantaloupe_log_level }}" }
+    - { rexp: '^log.application.RollingFileAppender.enabled',
+        line: "log.application.RollingFileAppender.enabled = true" }
+    - { rexp: '^log.application.RollingFileAppender.pathname',
+        line: "log.application.RollingFileAppender.pathname = {{ cantaloupe_log_path }}/application.log" }
+    - { rexp: '^log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern',
+        line: "log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ cantaloupe_log_path }}/application-%d{yyyy-MM-dd}.log" }
+    - { rexp: '^log.error.RollingFileAppender.enabled',
+        line: "log.error.RollingFileAppender.enabled = true" }
+    - { rexp: '^log.error.RollingFileAppender.pathname',
+        line: "log.error.RollingFileAppender.pathname = {{ cantaloupe_log_path }}/error.log" }
+    - { rexp: '^log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern',
+        line: "log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ cantaloupe_log_path }}/error-%d{yyyy-MM-dd}.log" }
 
-- name: Enable admin endpoint
+- name: Make General changes
   lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^endpoint.admin.enabled'
-    line: endpoint.admin.enabled = true
-  when: cantaloupe_is_dev|bool
+    path: "{{ cantaloupe_properties }}"
+    regexp: "{{ item.rexp }}"
+    line: "{{ item.line }}"
+  loop: "{{ cantaloupe_general_updates }}"
 
-- name: Enable administrative HTTP API
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^endpoint.api.enabled'
-    line: endpoint.api.enabled = true
-  when: cantaloupe_is_dev|bool
-
-- name: Set admin password
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^endpoint.admin.secret'
-    line: endpoint.admin.secret = {{ cantaloupe_admin_password }}
-
-- name: Set log level
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^log.application.level'
-    line: log.application.level = {{ cantaloupe_log_level }}
-
-- name: Enable rolling general application log
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^log.application.RollingFileAppender.enabled'
-    line: log.application.RollingFileAppender.enabled = true
-
-- name: Set general application log file path
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^log.application.RollingFileAppender.pathname'
-    line: log.application.RollingFileAppender.pathname = {{ cantaloupe_log_path }}/application.log
-
-- name: Set rolling general log filename pattern
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern'
-    line: log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ cantaloupe_log_path }}/application-%d{yyyy-MM-dd}.log
-
-- name: Enable rolling error log
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^log.error.RollingFileAppender.enabled'
-    line: log.error.RollingFileAppender.enabled = true
-
-- name: Set error log file path
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^log.error.RollingFileAppender.pathname'
-    line: log.error.RollingFileAppender.pathname = {{ cantaloupe_log_path }}/error.log
-
-- name: Set rolling error log filename pattern
-  lineinfile:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
-    regexp: '^log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern'
-    line: log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ cantaloupe_log_path }}/error-%d{yyyy-MM-dd}.log
