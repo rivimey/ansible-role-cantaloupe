@@ -11,10 +11,16 @@ cantaloupe_java_version: 18
 
 # Where to extract the cantaloupe archive
 cantaloupe_install_root: /opt
+
 # Target of a symlink from the extracted cantaloupe archive
 cantaloupe_symlink: /opt/cantaloupe
+
+# Directory into which addons like grok, pdfbox can be put
+cantaloupe_extras: "{{ cantaloupe_symlink }}/extra"
+
 # Path to cantaloupe logs
 cantaloupe_log_path: /var/log/cantaloupe
+
 # Cantaloupe user
 cantaloupe_user: cantaloupe
 # Cantaloupe group
@@ -40,7 +46,7 @@ cantaloupe_service_state: "started"
 # Could also add Xss (thread stack size)
 cantaloupe_memsize: "-Xms1g -Xmx2g"
 
-cantaloupe_start_command: "{{ cantaloupe_java }} -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties {{ cantaloupe_memsize }} -jar {{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
+cantaloupe_start_command: "{{ cantaloupe_java }} -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties {{ cantaloupe_memsize }} -jar {{ cantaloupe_archive_file }}"
 
 # Built-in processors are Java2dProcessor, TurboJpegProcessor,
 # KakaduNativeProcessor, OpenJpegProcessor, GrokProcessor, JaiProcessor,
@@ -48,10 +54,15 @@ cantaloupe_start_command: "{{ cantaloupe_java }} -Dcantaloupe.config={{ cantalou
 
 cantaloupe_is_dev: true
 cantaloupe_http_port: 8182
-cantaloupe_fallback_processor: ImageMagickProcessor
+cantaloupe_fallback_processor: FfmpegProcessor
 cantaloupe_log_level: debug
 
 cantaloupe_install_ffmpeg: true
+cantaloupe_install_grok: true
+cantaloupe_grok_version: 10.0.8
+cantaloupe_install_openjpeg: false
+cantaloupe_install_turbojpeg: true
+cantaloupe_install_pdfbox: true
 
 # Each source can be in BasicLookupStrategy or ScriptLookupStrategy;
 # Currently only the former is supported by this config.
