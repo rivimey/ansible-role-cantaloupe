@@ -1,4 +1,12 @@
 ---
+
+- name: Create cantaloupe user
+  user:
+    name: "{{ cantaloupe_user }}"
+    shell: /bin/bash
+    state: present
+  ignore_errors: True
+
 - name: Install Cantaloupe
   unarchive:
     remote_src: yes
@@ -17,7 +25,10 @@
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
 
-# Filename which stores the old checksum
+- name: Define Cantaloupe Properties filename
+  set_fact:
+    cantaloupe_properties: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+
 - name: Set Sample Config Hashsum filename
   set_fact:
     cantaloupe_sample_config_hash_filename: "{{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample.shasum"
@@ -80,7 +91,7 @@
   copy:
     remote_src: true
     src: "{{ cantaloupe_install_root }}/cantaloupe/cantaloupe.properties.sample"
-    dest: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    dest: "{{ cantaloupe_properties }}"
     mode: 0755
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
@@ -88,7 +99,7 @@
 
 - name: Fixup CRLF in config file
   replace:
-    path: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
+    path: "{{ cantaloupe_properties }}"
     regexp: "\r\n"
     replace: "\n"
   when: cantaloupe_sample_config_file_changed
@@ -142,8 +153,4 @@
     path: /var/cache/cantaloupe
     owner: "{{ cantaloupe_user }}"
     group: "{{ cantaloupe_group }}"
-
-- name: Define Properties filename
-  set_fact:
-    cantaloupe_properties: "{{ cantaloupe_properties_path }}/cantaloupe.properties"
 
